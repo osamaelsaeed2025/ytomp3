@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convert YouTube to MP3</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #8e2de2, #4a00e0); /* Original Gradient */
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    form {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 2px solid #ccc; /* Light gray border for input */
+      border-radius: 4px;
+      font-size: 16px;
+      background-color: #f8f8f8; /* Off-white background */
+      color: #333; /* Dark text for contrast */
+    }
+
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(142, 45, 226, 0.8);
+      border-color: #8e2de2; /* Purple border on focus */
+    }
+
+    button {
+      background: #8e2de2; /* Purple Button */
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #4a00e0; /* Darker Purple on Hover */
+    }
+
+    #result {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    a {
+      color: #ffccbc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>YouTube to MP3 Converter</h1>
+  <form id="convert-form">
+    <input type="url" id="youtube-url" placeholder="Enter YouTube URL" required>
+    <button type="submit">Convert</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    document.getElementById('convert-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('youtube-url').value;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerText = 'Processing...';
+      
+      const response = await fetch('/convert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        resultDiv.innerHTML = `<a href="${data.fileUrl}" download>Download MP3</a>`;
+      } else {
+        resultDiv.innerText = 'Error: ' + data.message;
+      }
+    });
+  </script>
+</body>
+</html>
